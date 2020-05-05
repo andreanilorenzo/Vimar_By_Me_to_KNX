@@ -1,0 +1,503 @@
+<html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta http-equiv="Content-Language" content="it">
+
+<title>Convert Vimar By-Me Group to Knx Address</title>
+<meta name="description" content="Convert Vimar By-Me Group to Knx Address">
+<meta http-equiv="description" content="Convert Vimar By-Me Group to Knx Address">
+<meta name="keywords" content="Convert Vimar By-Me Group to Knx Address">
+<meta name="publisher" content="Convert Vimar By-Me Group to Knx Address">
+<meta name="author" content="Lorenzo Andreani">
+<meta name="distribution" content="Global">
+<script language="JavaScript">
+<!--
+if(self!=self.parent){
+	self.parent.location=self.location;
+};
+
+function ww( mm ) {
+	self.status=mm;
+	return true;
+};
+function w0( mm ) {
+	self.status="";
+	return true;
+};
+
+
+
+var v_esa="";
+var v_oct="";
+var v_dec=0;
+var v_bin="";
+var ii=0;
+var rr=0;
+var tt=0;
+var hd=new Array("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F");
+
+function updall(qq){
+	v_esa="";
+	for(tt=qq;tt>0;tt=tt){
+		rr=Math.floor(tt/16);
+		ii=tt-16*rr;
+		v_esa=hd[ii]+""+v_esa;tt=rr;
+	};
+	v_dec=qq;
+	v_oct="";
+	for(tt=qq;tt>0;tt=tt){
+		rr=Math.floor(tt/8);
+		ii=tt-8*rr;
+		v_oct=ii+""+v_oct;
+		tt=rr;
+	};
+	v_bin="";
+	for(tt=qq;tt>0;tt=tt){
+		rr=Math.floor(tt/2);
+		ii=tt-2*rr;
+		v_bin=ii+""+v_bin;
+		tt=rr;
+	};
+	document.the.esa.value=v_esa;
+	document.the.dec.value=v_dec;document.the.oct.value=v_oct;document.the.bin.value=v_bin;
+};
+
+function dedec(dd){
+	v_dec=document.the.dec.value;
+	updall(v_dec);
+};
+
+function deesa(dd){
+	v_esa=document.the.esa.value;
+	v_esa=v_esa.toUpperCase();
+	v_dec=0;
+	for(tt=0;tt<v_esa.length;tt++){
+		rr=v_esa.charAt(tt);
+		if (rr=="F"){
+			ii=15;
+		}else{
+			if (rr=="E"){
+				ii=14;
+			}else{
+				if (rr=="D"){
+					ii=13;
+				}else{
+					if (rr=="C"){
+						ii=12;
+					}else{
+						if (rr=="B"){
+							ii=11;
+						}else{
+							if (rr=="A"){
+								ii=10;
+							}else{
+								ii=Math.floor(rr);
+							};
+						};
+					};
+				};
+			};
+		};
+		v_dec=16*v_dec+ii;
+	};
+	updall(v_dec);
+};
+
+function deoct(dd){
+	v_oct=document.the.oct.value;
+	v_dec=0;
+	for(tt=0;tt<v_oct.length;tt++){
+		rr=v_oct.charAt(tt);
+		ii=Math.floor(rr);
+		v_dec=8*v_dec+ii;
+	};
+	updall(v_dec);
+};
+
+function debin(dd){
+	v_bin=document.the.bin.value;
+	v_dec=0;
+	for(tt=0;tt<v_bin.length;tt++){
+		rr=v_bin.charAt(tt);
+		ii=Math.floor(rr);
+		v_dec=2*v_dec+ii;
+	};
+	updall(v_dec);
+};
+
+
+
+
+
+function isInt(value) {
+  if (isNaN(value)) {
+    return false;
+  }
+  var x = parseFloat(value);
+  return (x | 0) === x;
+}
+
+
+
+
+
+
+
+
+
+/**
+* Convert From/To Binary/Decimal/Hexadecimal in JavaScript
+* https://gist.github.com/faisalman
+*
+* Copyright 2012-2015, Faisalman <fyzlman@gmail.com>
+* Licensed under The MIT License
+* http://www.opensource.org/licenses/mit-license
+*/
+(function(){
+
+    var ConvertBase = function (num) {
+        return {
+            from : function (baseFrom) {
+                return {
+                    to : function (baseTo) {
+                        return parseInt(num, baseFrom).toString(baseTo);
+                    }
+                };
+            }
+        };
+    };
+        
+    // binary to decimal
+    ConvertBase.bin2dec = function (num) {
+        return ConvertBase(num).from(2).to(10);
+    };
+    
+    // binary to hexadecimal
+    ConvertBase.bin2hex = function (num) {
+        return ConvertBase(num).from(2).to(16);
+    };
+    
+    // decimal to binary
+    ConvertBase.dec2bin = function (num) {
+        return ConvertBase(num).from(10).to(2);
+    };
+    
+    // decimal to hexadecimal
+    ConvertBase.dec2hex = function (num) {
+        return ConvertBase(num).from(10).to(16);
+    };
+    
+    // hexadecimal to binary
+    ConvertBase.hex2bin = function (num) {
+        return ConvertBase(num).from(16).to(2);
+    };
+    
+    // hexadecimal to decimal
+    ConvertBase.hex2dec = function (num) {
+        return ConvertBase(num).from(16).to(10);
+    };
+    
+    this.ConvertBase = ConvertBase;
+    
+})(this);
+/**
+* Usage example:
+* ConvertBase.bin2dec('111'); // '7'
+* ConvertBase.dec2hex('42'); // '2a'
+* ConvertBase.hex2bin('f8'); // '11111000'
+* ConvertBase.dec2bin('22'); // '10110'
+*/
+function HEX2OCT(number, places) {
+  // Return error if number is not hexadecimal or contains more than ten characters (10 digits)
+  if (!/^[0-9A-Fa-f]{1,10}$/.test(number)) return '#NUM!';
+
+  // Convert hexadecimal number to decimal
+  var decimal = parseInt(number, 16);
+
+  // Return error if number is positive and greater than 0x1fffffff (536870911)
+  if (decimal > 536870911 && decimal < 1098974756864) return '#NUM!';
+  
+  // Ignore places and return a 10-character octal number if number is negative
+  if (decimal >= 1098974756864) return (decimal - 1098437885952).toString(8);
+
+  // Convert decimal number to octal
+  var result = decimal.toString(8);
+
+  // Return octal number using the minimum number of characters necessary if places is undefined
+  if (typeof places === 'undefined') {
+    return result;
+  } else {
+    // Return error if places is nonnumeric
+    if (isNaN(places)) return '#VALUE!';
+    
+    // Return error if places is negative
+    if (places < 0) return '#NUM!';
+    
+    // Truncate places in case it is not an integer
+    places = Math.floor(places);
+
+    // Pad return value with leading 0s (zeros) if necessary (using Underscore.string)
+    return (places >= result.length) ? _s.repeat('0', places - result.length) + result : '#NUM!';
+  }
+}
+
+
+
+
+
+//
+var v_esa="";
+var v_oct="";
+var v_dec=0;
+var v_bin="";
+//
+
+function debymegradd(dd){
+	var v_bymegradd="";
+	var v_knxgradd="";
+	var v_bymepysadd="0000";	// ???? non so come si calcola quindi resta così
+	var v_knxpysadd="";
+	
+	var v_bymegradd_tmp = "";
+	var v_notebyme="";
+	var v_tmp="";
+	
+	document.getElementById("notebyme").innerHTML=v_notebyme;
+	document.thevimar.knxgradd.value = document.thevimar.knxgradd.defaultValue;
+	document.thevimar.bymepysadd.value = document.thevimar.bymepysadd.defaultValue;
+	document.thevimar.knxpysadd.value = document.thevimar.knxpysadd.defaultValue;
+	
+	v_bymegradd=document.thevimar.bymegradd.value.trim();
+	v_bymegradd=v_bymegradd.toUpperCase();
+	document.thevimar.bymegradd.value=v_bymegradd;
+	
+	// Divido la stringa per ottenere le parti che mi servono
+	var v_by_tre = v_bymegradd.substr(v_bymegradd.length - 2);
+		v_bymegradd_tmp = v_bymegradd.substr(0, v_bymegradd.length - 2);
+	var v_by_due = v_bymegradd_tmp.substr(v_bymegradd_tmp.length - 1);
+		v_bymegradd_tmp = v_bymegradd_tmp.substr(0, v_bymegradd_tmp.length - 1);
+	var v_by_uno = v_bymegradd_tmp;
+		
+	v_notebyme = v_notebyme + 'SPLIT: ' + v_by_uno + '  ' + v_by_due + '  ' + v_by_tre;
+	
+	// Non so come calcolarlo.........
+	document.thevimar.bymepysadd.value = v_bymepysadd;
+	
+	
+	// CALCOLO: KNX GROUP ADDRESS -----------------------------------
+		
+		// Codifico la parte UNO (da Hex a Dec)
+		v_bin = ConvertBase.hex2bin(v_by_uno);
+		v_dec = ConvertBase.bin2dec(v_bin);	
+			if (v_dec==0){
+				v_dec = 1;
+			}else{
+				// = Valore + Valore + (Valore a sinistra tagliato dalla parte DUE)
+				v_tmp = HEX2OCT(v_by_due);
+				v_tmp = v_tmp.substr(0, v_tmp.length - 1);
+				v_tmp = parseInt(v_tmp);
+				if (isInt(v_tmp)){
+				}else{
+					v_tmp = 0;
+				}
+				
+				
+				v_dec = parseInt(v_dec) + parseInt(v_dec) +  parseInt(v_tmp);
+				v_dec = v_dec.toString();
+				v_dec = v_dec.substr(0, 2);
+			};
+
+		v_knxgradd = v_dec;
+		v_notebyme = v_notebyme + '<BR>KNX GROUP ADDRESS: (' + v_by_uno + ' >) ' + v_dec;
+	
+		// Codifico la parte DUE (da Hex a Oct)
+		v_oct = HEX2OCT(v_by_due);
+		v_oct = v_oct.substr(v_oct.length - 1);
+		v_knxgradd = v_knxgradd + '/' + v_oct;
+		v_notebyme = v_notebyme + ' (' + v_by_due + ' >) ' + v_oct;
+		
+		// Codifico la parte TRE (da Hex a Dec)
+		v_bin = ConvertBase.hex2bin(v_by_tre);
+		v_dec = ConvertBase.bin2dec(v_bin);
+		v_knxgradd =  v_knxgradd + '/' + v_dec;
+		
+		v_notebyme = v_notebyme + ' (' + v_by_tre + ' >) ' + v_dec + ' = [' + v_knxgradd + ']';
+
+		document.thevimar.knxgradd.value=v_knxgradd;
+	
+
+	// CALCOLO: KNX PHYSICAL ADDRESS -----------------------------------
+		
+		// Codifico la parte UNO (da Hex a Dec)
+		v_bin = ConvertBase.hex2bin(v_by_uno);
+		v_dec = ConvertBase.bin2dec(v_bin);
+		v_dec = v_dec.toString();
+		v_dec = v_dec.substr(0, 2);
+		v_knxpysadd = v_dec;
+		v_notebyme = v_notebyme + '<br>KNX PHYSICAL ADDRESS: (' + v_dec + ' >) ' + v_knxpysadd;
+
+		// Codifico la parte DUE (da Hex a Dec)
+		v_bin = ConvertBase.hex2bin(v_by_due);
+		v_dec = ConvertBase.bin2dec(v_bin);
+		v_knxpysadd = v_knxpysadd + '.' + v_dec;
+		
+		v_notebyme = v_notebyme + ' (' + v_by_due + ' >) ' + v_dec;
+
+		// Codifico la parte TRE (da Hex a Dec)
+		v_bin = ConvertBase.hex2bin(v_by_tre);
+		v_dec = ConvertBase.bin2dec(v_bin);
+		v_knxpysadd = v_knxpysadd + '.' + v_dec;
+		
+		v_notebyme = v_notebyme + ' (' + v_by_tre + ' >) ' + v_dec + ' = [' + v_knxpysadd + ']';
+		
+		document.thevimar.knxpysadd.value = v_knxpysadd;
+		
+	
+	document.getElementById("notebyme").innerHTML=v_notebyme;
+	
+	
+
+
+};
+
+
+
+//-->
+</script>
+
+
+<style type="text/css">
+body {
+	background-color: #333333;
+ }
+.style1 {
+	font-size: x-large;
+}
+.style2 {
+	background-color: #FFFFFF;
+}
+.style3 {
+	color: #000000;
+	background-color: #FFFFFF;
+}
+</style>
+
+
+</head>
+
+<body topmargin="0" leftmargin="2" rightmargin="2">
+<center><font face="Arial" size="2" color="#773300">
+<br>
+
+
+<form method="POST" name="the" onsubmit="return false;">
+	<div align="center">
+	<table border="1" cellpadding="4" cellspacing="0" width="600" bgcolor="#afafaf"><tbody><tr><td align="center">
+		<table border="0" cellpadding="5" style="border-collapse: collapse" width="100%" bordercolor="#111111" id="table1">
+			<caption><span class="style3">Convertitore, binario, decimale, esadecimale, ottale</span></caption>
+			<tbody><tr>
+				<td align="right" width="50%"><font face="Arial" size="2">
+					Valore <b><font color="#008000">ESADECIMALE</font></b>: <small> (cifre comprese tra 0 e F)</small></font>
+				</td>
+				<td width="50%"><font face="Arial" size="2" color="#880000">
+					<input type="text" name="esa" value="0" onchange="deesa(0);return true;" size="36"></font>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" width="50%"><font face="Arial" size="2">
+					Valore <b><font color="#800080">DECIMALE</font></b>: <small>(cifre comprese tra 0 e 9)</small></font>
+				</td>
+				<td width="50%"><font face="Arial" size="2" color="#880000">
+					<input type="text" name="dec" value="0" onchange="dedec(0);return true;" size="36"></font>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" width="50%"><font face="Arial" size="2">
+					Valore <b><font color="#0000FF">OTTALE</font></b>: <small>(cifre comprese tra 0 e 7)</small></font>
+				</td>
+				<td width="50%"><font face="Arial" size="2" color="#880000">
+					<input type="text" name="oct" value="0" onchange="deoct(0);return true;" size="36"></font>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" width="50%"><font face="Arial" size="2">
+					Valore <b><font color="#FF0000">BINARIO</font></b>: <small>(usa solo 0 ed 1)</small></font>
+				</td>
+				<td width="50%"><font face="Arial" size="2" color="#880000">
+					<input type="text" name="bin" value="0" onchange="debin(0);return true;" size="36"></font>
+				</td>
+			</tr>
+		</tbody></table>
+		<font face="Arial" size="2" color="#880000">
+		<input type="submit" value="Calcola" onclick="return false;"></font>
+	</td></tr></tbody></table></div>
+</form>
+
+
+<br>
+
+
+<form method="POST" name="thevimar" onsubmit="return false;">
+	<div align="center">
+	<table border="1" cellpadding="5" cellspacing="0" width="640" bgcolor="#afafaf"><tbody>
+	<tr><td align="center">
+		<table border="0" cellpadding="5" style="border-collapse: collapse" width="100%" bordercolor="#111111" id="table2">
+			<caption><span class="style3">Convert Vimar By-Me Group to Knx Address</span></caption>
+			<tbody>
+			
+				<tr>
+					<td align="right" width="60%"><font face="Arial" size="2">
+						<b>By-Me Group Address (Hex):</b> <small>(ex. 0C10  0B01  0C12)</small>
+					</td></font>
+					<td width="40%"><font face="Arial" size="2" color="#880000">
+						<input type="text" name="bymegradd" value="0000" onchange="debymegradd(0);return true;" size="36" style="border-color: #0000ff;"></font>
+					</td></font>
+				</tr>
+
+
+				<tr>
+					<td align="right" width="60%"><font face="Arial" size="2">
+						<b>Knx Group Address</b>: <small>(ex. 1/4/16  1/3/1  1/4/16)</small>
+					</td></font>
+					<td width="40%"><font face="Arial" size="2" color="#880000">
+						<input type="text" name="knxgradd" value="0/0/0" size="36" readonly>
+					</td></font>
+				</tr>
+				
+				<tr>
+					<td align="right" width="60%"><font face="Arial" size="2">
+						<b>By-Me Physical Address (Hex)</b>: <small>????</small>
+					</td></font>
+					<td width="40%"><font face="Arial" size="2" color="#880000">
+						<input type="text" name="bymepysadd" value="0000" size="36" readonly>
+					</td></font>
+				</tr>
+				
+				<tr>
+					<td align="right" width="60%"><font face="Arial" size="2">
+						<b>Knx Physical Address</b>: <small>(ex. 0.12.16  0.11.1  0.12.18)</small>
+					</td></font>
+					<td width="40%"><font face="Arial" size="2" color="#880000">
+						<input type="text" name="knxpysadd" value="0.0.0" size="36" readonly>
+					</td></font>
+				</tr>
+
+
+			</tbody>
+		</table>
+		<input type="submit" value="Convert" onclick="return false;">
+		</td></tr>
+		<tr><td>
+			<p id="notebyme"></p>
+	</td></tr></tbody></table></div>
+</form>
+
+
+
+</font>
+</center>
+
+    <div style='text-align:right;font-size:11px;'>
+		<hr/><a href='./index.html' style='color:#aaa;'>Index</a></div>
+    </div>
+
+</body>
+</html>
